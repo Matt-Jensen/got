@@ -112,12 +112,12 @@ function asPromise(opts) {
 						try {
 							res.body = JSON.parse(res.body);
 						} catch (e) {
-							throw new got.ParseError(e, statusCode, opts, data);
+							return reject(new got.ParseError(e, statusCode, opts, data));
 						}
 					}
 
 					if (statusCode < 200 || statusCode > limitStatusCode) {
-						throw new got.HTTPError(statusCode, opts);
+						return reject(new got.HTTPError(statusCode, opts, data));
 					}
 
 					resolve(res);
@@ -340,11 +340,14 @@ got.ParseError = createErrorClass('ParseError', function (e, statusCode, opts, d
 	this.message = `${e.message} in "${urlLib.format(opts)}": \n${data.slice(0, 77)}...`;
 });
 
-got.HTTPError = createErrorClass('HTTPError', function (statusCode, opts) {
+got.HTTPError = createErrorClass('HTTPError', function (statusCode, opts, data) {
 	stdError.call(this, {}, opts);
 	this.statusCode = statusCode;
 	this.statusMessage = nodeStatusCodes[this.statusCode];
 	this.message = `Response code ${this.statusCode} (${this.statusMessage})`;
+	if (body) {
+		this.body = body;
+	}
 });
 
 got.MaxRedirectsError = createErrorClass('MaxRedirectsError', function (statusCode, opts) {
