@@ -345,8 +345,8 @@ got.HTTPError = createErrorClass('HTTPError', function (statusCode, opts, data) 
 	this.statusCode = statusCode;
 	this.statusMessage = nodeStatusCodes[this.statusCode];
 	this.message = `Response code ${this.statusCode} (${this.statusMessage})`;
-	if (body) {
-		this.body = body;
+	if (data) {
+		this.data = data;
 	}
 });
 
