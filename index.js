@@ -116,10 +116,6 @@ function asPromise(opts) {
 						}
 					}
 
-					if (statusCode < 200 || statusCode > limitStatusCode) {
-						return reject(new got.HTTPError(statusCode, opts, data));
-					}
-
 					resolve(res);
 				})
 				.catch(err => {
